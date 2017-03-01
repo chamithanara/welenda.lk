@@ -12,13 +12,14 @@
     <meta name="keywords" content="">
 
     <title>
-        Obaju : e-commerce template
+        Welenda.lk - checkout
     </title>
 
     <meta name="keywords" content="">
 
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
 
+    <script src="js/angular/angular.min.js"></script>
     <!-- styles -->
     <link href="css/font-awesome.css" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -32,31 +33,37 @@
     <!-- your stylesheet with modifications -->
     <link href="css/custom.css" rel="stylesheet">
 
+ 
+    <script src="https://www.gstatic.com/firebasejs/3.6.5/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-messaging.js"></script>
     <script src="js/respond.min.js"></script>
-
+    <script src="js/angular/angular.min.js"></script>
+    <script src="js/app.js"></script>
     <link rel="shortcut icon" href="favicon.png">
-
-
-
 </head>
 
-<body>
+<body ng-app="welendaApp">
     <!-- *** TOPBAR ***
  _________________________________________________________ -->
-    <div id="top">
+    <div id="top" ng-controller="HomeCtrl">
         <div class="container">
             <div class="col-md-6 offer" data-animate="fadeInDown">
                 <a href="#" class="btn btn-success btn-sm" data-animate-hover="shake">Offer of the day</a>  <a href="#">Get flat 35% off on orders over $50!</a>
             </div>
             <div class="col-md-6" data-animate="fadeInDown">
                 <ul class="menu">
-                    <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                    <li ng-if="!isLoggedIn"><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
                     </li>
-                    <li><a href="register.html">Register</a>
+                    <li ng-if="!isLoggedIn"><a href="register.html">{{RegTxt}}</a>
+                    </li> 
+                    <li ng-if="isLoggedIn"><a style="text-decoration: none;">Hello {{username}}!</a>
                     </li>
                     <li><a href="contact.html">Contact</a>
                     </li>
-                    <li><a href="#">Recently viewed</a>
+                    <li ng-if="isLoggedIn"><a ng-click="logoutUser()">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -69,13 +76,13 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="Login">Customer login</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="customer-orders.html" method="post">
+                    <div class="modal-body" ng-controller="AuthCtrl">
+                        <form ng-submit="submitFormLogin(user)">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="email-modal" placeholder="email">
+                                <input ng-model="user.loginEmail" type="text" class="form-control" id="email-modal" placeholder="email">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password-modal" placeholder="password">
+                                <input ng-model="user.loginPassword" type="password" class="form-control" id="password-modal" placeholder="password">
                             </div>
 
                             <p class="text-center">
@@ -539,7 +546,7 @@
 
         <!-- *** FOOTER ***
  _________________________________________________________ -->
-        <div id="footer" data-animate="fadeInUp">
+       <div id="footer" data-animate="fadeInUp">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 col-sm-6">
@@ -576,26 +583,18 @@
 
                         <h4>Top categories</h4>
 
-                        <h5>Men</h5>
+                        <h5>Electronics</h5>
 
                         <ul>
-                            <li><a href="category.html">T-shirts</a>
-                            </li>
-                            <li><a href="category.html">Shirts</a>
-                            </li>
-                            <li><a href="category.html">Accessories</a>
+                            <li><a href="category.html">Fitness Trackers</a>
                             </li>
                         </ul>
 
-                        <h5>Ladies</h5>
+                        <h5>Toys</h5>
                         <ul>
-                            <li><a href="category.html">T-shirts</a>
+                            <li><a href="category.html">Hot Wheels</a>
                             </li>
-                            <li><a href="category.html">Skirts</a>
-                            </li>
-                            <li><a href="category.html">Pants</a>
-                            </li>
-                            <li><a href="category.html">Accessories</a>
+                            <li><a href="category.html">Model Cars</a>
                             </li>
                         </ul>
 
@@ -608,13 +607,10 @@
 
                         <h4>Where to find us</h4>
 
-                        <p><strong>Obaju Ltd.</strong>
-                            <br>13/25 New Avenue
-                            <br>New Heaven
-                            <br>45Y 73J
-                            <br>England
+                        <p>Mirihana,
+                            <br>Nugegoda,
                             <br>
-                            <strong>Great Britain</strong>
+                            <strong>Sri Lanka</strong>
                         </p>
 
                         <a href="contact.html">Go to contact page</a>
@@ -624,14 +620,9 @@
                     </div>
                     <!-- /.col-md-3 -->
 
-
-
                     <div class="col-md-3 col-sm-6">
 
                         <h4>Get the news</h4>
-
-                        <p class="text-muted">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-
                         <form>
                             <div class="input-group">
 
@@ -681,13 +672,8 @@
         <div id="copyright">
             <div class="container">
                 <div class="col-md-6">
-                    <p class="pull-left">© 2015 Your name goes here.</p>
+                    <p class="pull-left">© 2017 Welenda.lk</p>
 
-                </div>
-                <div class="col-md-6">
-                    <p class="pull-right">Template by <a href="https://bootstrapious.com/e-commerce-templates">Bootstrapious.com</a>
-                         <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
-                    </p>
                 </div>
             </div>
         </div>
@@ -697,7 +683,6 @@
 
     </div>
     <!-- /#all -->
-
 
     
 

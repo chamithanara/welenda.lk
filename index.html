@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
 
     <title>
-        Obaju : e-commerce template
+        Welenda.lk - Home
     </title>
 
     <meta name="keywords" content="">
@@ -32,32 +32,37 @@
     <!-- your stylesheet with modifications -->
     <link href="css/custom.css" rel="stylesheet">
 
+    <script src="https://www.gstatic.com/firebasejs/3.6.5/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-messaging.js"></script>
     <script src="js/respond.min.js"></script>
-
+    <script src="js/angular/angular.min.js"></script>
+    <script src="js/app.js"></script>
     <link rel="shortcut icon" href="favicon.png">
-
-
-
 </head>
 
-<body>
+<body ng-app="welendaApp">
 
     <!-- *** TOPBAR ***
  _________________________________________________________ -->
-    <div id="top">
+    <div id="top" ng-controller="HomeCtrl">
         <div class="container">
             <div class="col-md-6 offer" data-animate="fadeInDown">
                 <a href="#" class="btn btn-success btn-sm" data-animate-hover="shake">Offer of the day</a>  <a href="#">Get flat 35% off on orders over $50!</a>
             </div>
             <div class="col-md-6" data-animate="fadeInDown">
                 <ul class="menu">
-                    <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
+                    <li ng-if="!isLoggedIn"><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
                     </li>
-                    <li><a href="register.html">Register</a>
+                    <li ng-if="!isLoggedIn"><a href="register.html">{{RegTxt}}</a>
+                    </li> 
+                    <li ng-if="isLoggedIn"><a style="text-decoration: none;">Hello {{username}}!</a>
                     </li>
                     <li><a href="contact.html">Contact</a>
                     </li>
-                    <li><a href="#">Recently viewed</a>
+                    <li ng-if="isLoggedIn"><a ng-click="logoutUser()">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -70,13 +75,13 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="Login">Customer login</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="customer-orders.html" method="post">
+                    <div class="modal-body" ng-controller="AuthCtrl">
+                        <form ng-submit="submitFormLogin(user)">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="email-modal" placeholder="email">
+                                <input ng-model="user.loginEmail" type="text" class="form-control" id="email-modal" placeholder="email">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password-modal" placeholder="password">
+                                <input ng-model="user.loginPassword" type="password" class="form-control" id="password-modal" placeholder="password">
                             </div>
 
                             <p class="text-center">
@@ -127,76 +132,47 @@
             <div class="navbar-collapse collapse" id="navigation">
 
                 <ul class="nav navbar-nav navbar-left">
-                    <li class="active"><a href="index.html">Home</a>
+<!--                     class="active"-->
+                    <li><a href="index.html">Home</a>
                     </li>
                     <li class="dropdown yamm-fw">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Men <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Electronics <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <div class="yamm-content">
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h5>Clothing</h5>
+                                            <h5>Smart Watches</h5>
                                             <ul>
-                                                <li><a href="category.html">T-shirts</a>
+                                                <li><a href="category.html">Apple</a>
                                                 </li>
-                                                <li><a href="category.html">Shirts</a>
+                                                <li><a href="category.html">Xiaomi</a>
                                                 </li>
-                                                <li><a href="category.html">Pants</a>
-                                                </li>
-                                                <li><a href="category.html">Accessories</a>
+                                                <li><a href="category.html">Samsung</a>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-3">
-                                            <h5>Shoes</h5>
+                                            <h5>Fitness Trackers</h5>
                                             <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                                <li><a href="category.html">Casual</a>
+                                                <li><a href="category.html">Xiaomi</a>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-3">
-                                            <h5>Accessories</h5>
-                                            <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                                <li><a href="category.html">Casual</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                                <li><a href="category.html">Casual</a>
-                                                </li>
-                                            </ul>
+                                            <div class="banner">
+                                                <a href="#" style="text-decoration: none;">
+                                                    <img src="img/banner.jpg" class="img img-responsive">
+                                                </a>
+                                            </div>                                           
                                         </div>
                                         <div class="col-sm-3">
-                                            <h5>Featured</h5>
-                                            <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                            </ul>
-                                            <h5>Looks and trends</h5>
-                                            <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                            </ul>
+                                            <div class="banner">
+                                                <a href="#" style="text-decoration: none;">
+                                                    <img src="img/banner.jpg" class="img img-responsive">
+                                                </a>
+                                            </div>
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -206,74 +182,35 @@
                     </li>
 
                     <li class="dropdown yamm-fw">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Ladies <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200">Toys <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <div class="yamm-content">
                                     <div class="row">
-                                        <div class="col-sm-3">
-                                            <h5>Clothing</h5>
+                                        <div class="col-sm-6">
                                             <ul>
-                                                <li><a href="category.html">T-shirts</a>
+                                                <li><a href="category.html">Hot Wheels</a>
                                                 </li>
-                                                <li><a href="category.html">Shirts</a>
-                                                </li>
-                                                <li><a href="category.html">Pants</a>
-                                                </li>
-                                                <li><a href="category.html">Accessories</a>
+                                                <li><a href="category.html">Models</a>
                                                 </li>
                                             </ul>
                                         </div>
+                                        
                                         <div class="col-sm-3">
-                                            <h5>Shoes</h5>
-                                            <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                                <li><a href="category.html">Casual</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <h5>Accessories</h5>
-                                            <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                                <li><a href="category.html">Casual</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                                <li><a href="category.html">Casual</a>
-                                                </li>
-                                            </ul>
-                                            <h5>Looks and trends</h5>
-                                            <ul>
-                                                <li><a href="category.html">Trainers</a>
-                                                </li>
-                                                <li><a href="category.html">Sandals</a>
-                                                </li>
-                                                <li><a href="category.html">Hiking shoes</a>
-                                                </li>
-                                            </ul>
+                                            <div class="banner">
+                                                <a href="#" style="text-decoration: none;">
+                                                    <img src="img/banner.jpg" class="img img-responsive">
+                                                </a>
+                                            </div>
+                                           
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="banner">
-                                                <a href="#">
-                                                    <img src="img/banner.jpg" class="img img-responsive" alt="">
+                                                <a href="#" style="text-decoration: none;">
+                                                    <img src="img/banner.jpg" class="img img-responsive">
                                                 </a>
                                             </div>
-                                            <div class="banner">
-                                                <a href="#">
-                                                    <img src="img/banner2.jpg" class="img img-responsive" alt="">
-                                                </a>
-                                            </div>
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -418,59 +355,15 @@
                             <img class="img-responsive" src="img/main-slider2.jpg" alt="">
                         </div>
                         <div class="item">
-                            <img class="img-responsive" src="img/main-slider3.jpg" alt="">
+                            <img class="img-responsive" src="img/main-slider1.jpg" alt="">
                         </div>
                         <div class="item">
-                            <img class="img-responsive" src="img/main-slider4.jpg" alt="">
+                            <img class="img-responsive" src="img/main-slider2.jpg" alt="">
                         </div>
                     </div>
                     <!-- /#main-slider -->
                 </div>
-            </div>
-
-            <!-- *** ADVANTAGES HOMEPAGE ***
- _________________________________________________________ -->
-            <div id="advantages">
-
-                <div class="container">
-                    <div class="same-height-row">
-                        <div class="col-sm-4">
-                            <div class="box same-height clickable">
-                                <div class="icon"><i class="fa fa-heart"></i>
-                                </div>
-
-                                <h3><a href="#">We love our customers</a></h3>
-                                <p>We are known to provide best possible service ever</p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="box same-height clickable">
-                                <div class="icon"><i class="fa fa-tags"></i>
-                                </div>
-
-                                <h3><a href="#">Best prices</a></h3>
-                                <p>You can check that the height of the boxes adjust when longer text like this one is used in one of them.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="box same-height clickable">
-                                <div class="icon"><i class="fa fa-thumbs-up"></i>
-                                </div>
-
-                                <h3><a href="#">100% satisfaction guaranteed</a></h3>
-                                <p>Free returns on everything for 3 months.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.row -->
-
-                </div>
-                <!-- /.container -->
-
-            </div>
-            <!-- /#advantages -->
+            </div>           
 
             <!-- *** ADVANTAGES END *** -->
 
@@ -478,13 +371,13 @@
  _________________________________________________________ -->
             <div id="hot">
 
-                <div class="box">
+<!--                <div class="box">
                     <div class="container">
                         <div class="col-md-12">
                             <h2>Hot this week</h2>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="container">
                     <div class="product-slider">
@@ -771,6 +664,49 @@
             <!-- /#hot -->
 
             <!-- *** HOT END *** -->
+             <!-- *** ADVANTAGES HOMEPAGE ***
+ _________________________________________________________ -->
+            <div id="advantages">
+
+                <div class="container">
+                    <div class="same-height-row">
+                        <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-heart"></i>
+                                </div>
+
+                                <h3><a href="#">We love our customers</a></h3>
+                                <p>We are known to provide best possible service ever</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-tags"></i>
+                                </div>
+
+                                <h3><a href="#">Best prices</a></h3>
+                                <p>You can check that the height of the boxes adjust when longer text like this one is used in one of them.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-thumbs-up"></i>
+                                </div>
+
+                                <h3><a href="#">100% satisfaction guaranteed</a></h3>
+                                <p>Free returns on everything for 3 months.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+                <!-- /.container -->
+
+            </div>
+            <!-- /#advantages -->
 
             <!-- *** GET INSPIRED ***
  _________________________________________________________ -->
@@ -861,7 +797,7 @@
 
         <!-- *** FOOTER ***
  _________________________________________________________ -->
-        <div id="footer" data-animate="fadeInUp">
+       <div id="footer" data-animate="fadeInUp">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 col-sm-6">
@@ -898,26 +834,18 @@
 
                         <h4>Top categories</h4>
 
-                        <h5>Men</h5>
+                        <h5>Electronics</h5>
 
                         <ul>
-                            <li><a href="category.html">T-shirts</a>
-                            </li>
-                            <li><a href="category.html">Shirts</a>
-                            </li>
-                            <li><a href="category.html">Accessories</a>
+                            <li><a href="category.html">Fitness Trackers</a>
                             </li>
                         </ul>
 
-                        <h5>Ladies</h5>
+                        <h5>Toys</h5>
                         <ul>
-                            <li><a href="category.html">T-shirts</a>
+                            <li><a href="category.html">Hot Wheels</a>
                             </li>
-                            <li><a href="category.html">Skirts</a>
-                            </li>
-                            <li><a href="category.html">Pants</a>
-                            </li>
-                            <li><a href="category.html">Accessories</a>
+                            <li><a href="category.html">Model Cars</a>
                             </li>
                         </ul>
 
@@ -930,13 +858,10 @@
 
                         <h4>Where to find us</h4>
 
-                        <p><strong>Obaju Ltd.</strong>
-                            <br>13/25 New Avenue
-                            <br>New Heaven
-                            <br>45Y 73J
-                            <br>England
+                        <p>Mirihana,
+                            <br>Nugegoda,
                             <br>
-                            <strong>Great Britain</strong>
+                            <strong>Sri Lanka</strong>
                         </p>
 
                         <a href="contact.html">Go to contact page</a>
@@ -946,14 +871,9 @@
                     </div>
                     <!-- /.col-md-3 -->
 
-
-
                     <div class="col-md-3 col-sm-6">
 
                         <h4>Get the news</h4>
-
-                        <p class="text-muted">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-
                         <form>
                             <div class="input-group">
 
@@ -1003,13 +923,8 @@
         <div id="copyright">
             <div class="container">
                 <div class="col-md-6">
-                    <p class="pull-left">© 2015 Your name goes here.</p>
+                    <p class="pull-left">© 2017 Welenda.lk</p>
 
-                </div>
-                <div class="col-md-6">
-                    <p class="pull-right">Template by <a href="https://bootstrapious.com/e-commerce-templates">Bootstrapious.com</a>
-                         <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
-                    </p>
                 </div>
             </div>
         </div>
@@ -1019,9 +934,6 @@
 
     </div>
     <!-- /#all -->
-
-
-    
 
     <!-- *** SCRIPTS TO INCLUDE ***
  _________________________________________________________ -->
